@@ -131,6 +131,7 @@ public final class Ficha {
      * @return the Tipo.
      */
     public Tipo getTipo() {
+
         return this.tipo;
     }
 }
