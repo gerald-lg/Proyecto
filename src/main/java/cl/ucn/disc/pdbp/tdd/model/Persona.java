@@ -3,39 +3,54 @@
  */
 package cl.ucn.disc.pdbp.tdd.model;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
 /**
  * Clase Persona
  * @author Gerald López
  */
+@DatabaseTable(tableName = "persona")
 public class Persona {
+
+    /**
+     * The id
+     */
+    @DatabaseField(generatedId = true)
+    private Long id;
+
     /**
      * The Nombre of person
      */
-    private final String nombre;
+    @DatabaseField(canBeNull = false)
+    private String nombre;
     /**
      * The Apellido of Person
      */
-    private final String apellido;
+    @DatabaseField(canBeNull = false)
+    private String apellido;
     /**
      *The RUT
      */
-    private final String rut;
+    @DatabaseField(canBeNull = false, index = true)
+    private String rut;
     /**
      * The direccion
      */
-    private final String direccion;
+    @DatabaseField(canBeNull = false)
+    private String direccion;
     /**
      * The telefono fijo
      */
-    private final Integer telefonoFijo;
+    private Integer telefonoFijo;
     /**
      * The teléfono móvil
      */
-    private final Integer telefonoMovil;
+    private Integer telefonoMovil;
     /**
      * The email
      */
-    private final String email;
+    private String email;
 
     /**
      * Constructor de una persona
@@ -94,18 +109,34 @@ public class Persona {
         return this.nombre + " " + this.apellido;
     }
 
+    /**
+     *
+     * @return the direccion
+     */
     public String getDireccion() {
         return this.direccion;
     }
 
+    /**
+     *
+     * @return the telefono fijo
+     */
     public Integer getTelefonoFijo() {
         return this.telefonoFijo;
     }
 
+    /**
+     *
+     * @return the telefono móvil.
+     */
     public Integer getTelefonoMovil() {
         return this.telefonoMovil;
     }
 
+    /**
+     *
+     * @return the email.
+     */
     public String getEmail() {
         return this.email;
     }
