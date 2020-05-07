@@ -67,7 +67,7 @@ public final class ModelTest {
      * Test the digito verificador.
      */
     @Test
-    @Disabled // remove to run
+
     public void testDigitoVerificador() {
 
         Assertions.assertFalse(Validation.isRutValid(null));
