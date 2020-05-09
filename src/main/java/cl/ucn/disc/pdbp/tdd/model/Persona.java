@@ -6,6 +6,10 @@ package cl.ucn.disc.pdbp.tdd.model;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import javax.swing.text.MutableAttributeSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * Clase Persona
  * @author Gerald López
@@ -42,15 +46,24 @@ public class Persona {
     /**
      * The telefono fijo
      */
+    @DatabaseField(canBeNull = true)
     private Integer telefonoFijo;
     /**
      * The teléfono móvil
      */
+    @DatabaseField(canBeNull = true)
     private Integer telefonoMovil;
     /**
      * The email
      */
+    @DatabaseField(canBeNull = true)
     private String email;
+
+    //TODO:Verificar el tamaño de los telefonos.
+    private final Pattern telFijoValido = Pattern.compile("^55[0-9]{6}$");
+    private final Pattern telMovilValido = Pattern.compile("^9[0-9]{8}$");
+    private final Pattern emailValido = Pattern.compile("^[_a-z0-9-]+(.[_a-z0-9-]+)*@[a-z0-9-]+(.[a-z0-9-]+)*(.[a-z]{2,4})$");
+
 
     /**
      * Constructor de una persona
@@ -60,24 +73,47 @@ public class Persona {
      */
 
     public Persona(String nombre, String apellido, String rut, String direccion, Integer telefonoFijo, Integer telefonoMovil, String email) {
-        Validation.isPersonValid(nombre,apellido,rut);
+        //TODO: Escribir el mensaje de las excepciones.
+        if (nombre.equals(null) ||  apellido.equals(null) || rut.equals(null)) {
+            throw new NullPointerException();
+        }
 
-        Validation.sizeName(nombre);
-
+        if (nombre.length() < 2) {
+            throw new RuntimeException();
+        }
         this.nombre = nombre;
 
-        Validation.sizeApellido(apellido);
+        if (apellido.length() < 4) {
+            throw new RuntimeException();
+        }
 
         this.apellido = apellido;
 
-        Validation.RutValido(rut);
-
+        if(!Validation.isRutValid(rut)){
+            throw new RuntimeException();
+        }
         this.rut = rut;
 
+        if(!direccion.equals(null) && direccion.length()<2) {
+            throw new RuntimeException();
+        }
         this.direccion = direccion;
-
+        Matcher fijoMatch = telFijoValido.matcher(Integer.toString(telefonoFijo));
+        if(telefonoFijo != null && fijoMatch.matches() == false) {
+            throw new RuntimeException();
+        }
         this.telefonoFijo = telefonoFijo;
+
+        Matcher movilMatch = telMovilValido.matcher(Integer.toString(telefonoMovil));
+        if(telefonoMovil != null && movilMatch.matches() == false){
+            throw new RuntimeException();
+        }
         this.telefonoMovil = telefonoMovil;
+
+        Matcher emailMatch = emailValido.matcher(email);
+        if(!email.equals(null) && emailMatch.matches() == false) {
+            throw new RuntimeException();
+        }
         this.email = email;
     }
 
