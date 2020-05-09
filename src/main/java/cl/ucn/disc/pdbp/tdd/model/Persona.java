@@ -5,8 +5,8 @@ package cl.ucn.disc.pdbp.tdd.model;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import utils.Validation;
 
-import javax.swing.text.MutableAttributeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
