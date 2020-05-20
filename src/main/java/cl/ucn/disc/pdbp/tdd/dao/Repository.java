@@ -26,17 +26,39 @@ package cl.ucn.disc.pdbp.tdd.dao;
 import java.util.List;
 
 /**
- *
- * @param <T>
+ * Capa de acceso a los datos
+ * @author Gerald López
+ * @param <T> type of object
+ * @param <K> type of primary K
  */
-public interface Dao<T> {
+public interface Repository<T,K> {
+    /**
+     * @return a List of T
+     */
+    List<T> findAll();
 
-    List<T> getAll();
+    /**
+     * @param id to find by ID
+     */
+    T findById(K id);
 
-    public void create(T obj);
-    public T get(long id);
-    public void update(T obj);
-    public void delete (long id);
+    /**
+     * @param obj to save
+     * @return true
+     */
+    public boolean create(T obj);
+
+    /**
+     * @param obj to update
+     * @return true
+     */
+    public boolean update(T obj);
+
+    /**
+     * @param id to delete
+     * @return true
+     */
+    public boolean delete (K id);
 
 
 }
