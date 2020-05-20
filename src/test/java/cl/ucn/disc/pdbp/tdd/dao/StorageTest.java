@@ -23,7 +23,7 @@
  */
 package cl.ucn.disc.pdbp.tdd.dao;
 
-import checkers.units.quals.A;
+
 import cl.ucn.disc.pdbp.tdd.model.*;
 import cl.ucn.disc.pdbp.tdd.utils.Entity;
 import com.j256.ormlite.dao.Dao;
@@ -31,7 +31,7 @@ import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
-import org.h2.table.Table;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -243,51 +243,50 @@ public final class StorageTest {
             TableUtils.createTableIfNotExists(connectionSource, Ficha.class);
             //Create table Control
             TableUtils.createTableIfNotExists(connectionSource, Control.class);
+            //Insert Personas on the table
+            Repository<Persona,Long> theRepoPersona = new RepositoryOrmLite<>(connectionSource,Persona.class);
 
-            {
-                //Instanciar a Duenio
-                Persona duenio = new Persona("Gerald","Lopez","198221287","Malleco 1204",55222222,944707039,"glopez@gmail.com");
+            Repository<Ficha,Long> repoFicha = new RepositoryOrmLite<>(connectionSource,Ficha.class);
+            //Repository Control
+            Repository<Control,Long> repoControl = new RepositoryOrmLite<>(connectionSource,Control.class);
 
-                //Instanciar a Veterinario
-                Persona vet = new Persona("Mauricio","Contreras","116002825","Av Argentina 0351",55111111,987654321,"mauro.ctreras@gmail.com");
+            //Instanciar a Duenio
+            Persona duenio = new Persona("Gerald","Lopez","198221287","Malleco 1204",55222222,944707039,"glopez@gmail.com");
 
-                //Insert Personas on the table
-                Repository<Persona,Long> theRepoPersona = new RepositoryOrmLite<>(connectionSource,Persona.class);
-
-                if(!theRepoPersona.create(duenio)){
-                    Assertions.fail("Can't insert persona");
-                }
-                if(!theRepoPersona.create(vet)){
-                    Assertions.fail("Can't insert persona");
-                }
-
-                //Instanciar una ficha
-                Ficha ficha = new Ficha(123, ZonedDateTime.now(),"Firulais","Canino","Rottweiler", Sexo.MACHO,"Negro", Tipo.INTERNO,duenio);
-
-                //Create una ficha en el repositorio
-                Repository<Ficha,Long> repoFicha = new RepositoryOrmLite<Ficha,Long>(connectionSource,Ficha.class);
-                if(!repoFicha.create(ficha)){
-                    Assertions.fail("Can't create ficha");
-                }
-
-                //Instancia of Control v1.
-                Control control = new Control(ZonedDateTime.now(),ZonedDateTime.now(),36,40,68,"Dado de alta",vet,ficha);
-
-                //Repository Control
-                Repository<Control,Long> repoControl = new RepositoryOrmLite<>(connectionSource,Control.class);
-
-                //Crear un control via repositorio
-
-                if(!repoControl.create(control)){
-                    Assertions.fail("Can't create control");
-                }
-
-
-                log.debug("Control: {}.", Entity.toString(control));
-
-                log.debug("Ficha: {}",Entity.toString(ficha));
-
+            if(!theRepoPersona.create(duenio)){
+                Assertions.fail("Can't insert persona");
             }
+
+            //Instanciar una ficha
+            Ficha ficha = new Ficha(123, ZonedDateTime.now(),"Firulais","Canino","Rottweiler", Sexo.MACHO,"Negro", Tipo.INTERNO,duenio);
+
+            if(!repoFicha.create(ficha)){
+                Assertions.fail("Can't create ficha");
+            }
+
+            Ficha ficha1 = repoFicha.findById(1L);
+
+            //Instanciar a Veterinario
+            Persona vet = new Persona("Mauricio","Contreras","116002825","Av Argentina 0351",55111111,987654321,"mauro.ctreras@gmail.com");
+
+            if(!theRepoPersona.create(vet)){
+                Assertions.fail("Can't insert persona");
+            }
+
+            //Instancia of Control
+            Control control = new Control(ZonedDateTime.now(),ZonedDateTime.now(),36,40,68,"Dado de alta",vet,ficha1);
+
+            //Crear un control via repositorio
+            if(!repoControl.create(control)){
+                Assertions.fail("Can't create control");
+            }
+
+
+            log.debug("Control: {}.", Entity.toString(control));
+
+            log.debug("Ficha: {}",Entity.toString(ficha1));
+
+
 
 
         } catch (SQLException | IOException exception){
