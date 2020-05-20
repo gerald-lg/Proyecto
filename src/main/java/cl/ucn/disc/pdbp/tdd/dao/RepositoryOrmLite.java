@@ -25,6 +25,7 @@ package cl.ucn.disc.pdbp.tdd.dao;
 
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
+import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.support.ConnectionSource;
 
 import java.sql.SQLException;
@@ -66,6 +67,28 @@ public final class RepositoryOrmLite<T,K> implements Repository<T, K> {
         } catch (SQLException throwables) {
             throw  new RuntimeException(throwables);
         }
+    }
+
+    /**
+     * @param K to filter
+     * @param value to search
+     * @return
+     */
+    @Override
+    public List<T> findAll(String K, Object value) {
+        try {
+            return theDao.queryForEq(K,value);
+        } catch (SQLException throwables) {
+            throw new RuntimeException(throwables);
+        }
+    }
+
+    /**
+     * @return the {@link QueryBuilder}
+     */
+    @Override
+    public QueryBuilder<T, K> getQuery() {
+        return theDao.queryBuilder();
     }
 
     /**
