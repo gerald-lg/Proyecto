@@ -27,7 +27,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.Validation;
+import cl.ucn.disc.pdbp.tdd.utils.Validation;
 
 /**
  * Model test.
