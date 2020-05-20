@@ -23,7 +23,16 @@
  */
 package cl.ucn.disc.pdbp.tdd.model;
 
+import checkers.units.quals.C;
+import cl.ucn.disc.pdbp.tdd.dao.ZonedDateTimeType;
+import com.j256.ormlite.dao.ForeignCollection;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
+
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 
 /**
@@ -32,41 +41,72 @@ import java.time.ZonedDateTime;
  * @author Gerald López
  */
 public final class Ficha {
+
+    /**
+     *
+     */
+    @DatabaseField(generatedId = true)
+    private Long id;
     /**
      *Numero de ficha
      */
-    private final long ficha;
+    @DatabaseField(unique = true)
+    private Integer ficha;
     /**
      * Fecha de nacimiento
      */
-    private final ZonedDateTime fechaNacimiento;
+    @DatabaseField(persisterClass = ZonedDateTimeType.class)
+    private ZonedDateTime fechaNacimiento;
     /**
      * Nombre del paciente
      */
-    private final String nombrePaciente;
+    @DatabaseField
+    private String nombrePaciente;
     /**
      * Especie ej: canino
      */
-    private final String especie;
+    @DatabaseField
+    private String especie;
     /**
      * Raza
      */
-    private final String raza;
+    @DatabaseField
+    private String raza;
 
     /**
      * Sexo
      */
-     private final Sexo sexo;
+    @DatabaseField
+     private Sexo sexo;
     /**
      * Color, ej: cobrizo
      */
-    private final String color;
+    @DatabaseField
+    private String color;
 
     /**
      * Tipo: interno/externo
      */
-    private final Tipo tipo;
+    @DatabaseField
+    private Tipo tipo;
+    /**
+     * The Duenio
+     */
+    @DatabaseField(foreign = true, canBeNull = false, foreignAutoRefresh = true)
+    private Persona duenio;
 
+    /**
+     * List of controles
+     */
+    @ForeignCollectionField(eager = true)
+    private ForeignCollection<Control> controles;
+
+    /**
+     * Constructor vacio.
+     */
+    Ficha(){
+        //nada aqui.
+    }
     /**
      * The constructor
      * @param ficha
@@ -78,7 +118,7 @@ public final class Ficha {
      * @param color
      * @param tipo
      */
-    public Ficha(long ficha, ZonedDateTime fechaNacimiento, String nombrePaciente, String especie, String raza, Sexo sexo, String color, Tipo tipo) {
+    public Ficha(Integer ficha, ZonedDateTime fechaNacimiento, String nombrePaciente, String especie, String raza, Sexo sexo, String color, Tipo tipo,Persona duenio) {
         //TODO:Agregar Validaciones.
         this.ficha = ficha;
         this.fechaNacimiento = fechaNacimiento;
@@ -88,6 +128,7 @@ public final class Ficha {
         this.sexo = sexo;
         this.color = color;
         this.tipo = tipo;
+        this.duenio = duenio;
     }
 
     /**
@@ -153,5 +194,29 @@ public final class Ficha {
     public Tipo getTipo() {
 
         return this.tipo;
+    }
+
+    /**
+     *
+     * @return the Duenio
+     */
+    public Persona getDuenio() {
+        return this.duenio;
+    }
+
+    /**
+     *
+     * @return the Id
+     */
+    public Long getId() {
+        return id;
+    }
+
+    /**
+     *
+     * @return the list of control
+     */
+    public List<Control> getControles() {
+        return Collections.unmodifiableList(new ArrayList<>(controles));
     }
 }
