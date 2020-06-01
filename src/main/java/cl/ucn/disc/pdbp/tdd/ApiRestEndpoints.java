@@ -24,13 +24,13 @@
 
 package cl.ucn.disc.pdbp.tdd;
 
-import cl.ucn.disc.pdbp.tdd.model.Control;
-import cl.ucn.disc.pdbp.tdd.model.Ficha;
-import cl.ucn.disc.pdbp.tdd.model.Persona;
+import cl.ucn.disc.pdbp.tdd.model.*;
 import io.javalin.http.Context;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sun.rmi.server.InactiveGroupException;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 
 /**
@@ -101,11 +101,11 @@ public final class ApiRestEndpoints {
         String apellido = ctx.pathParam("apellido");
         String rut = ctx.pathParam("rut");
         String direccion = ctx.pathParam("direccion");
-        String telefonoFijo = ctx.pathParam("telefonoFijo");
-        String telefonoMovil = ctx.pathParam("telefonoMovil");
+        Integer telefonoFijo = Integer.parseInt(ctx.formParam("telefonoFijo"));
+        Integer telefonoMovil = Integer.parseInt(ctx.formParam("telefonoMovil"));
         String email = ctx.pathParam("email");
 
-        Persona persona = new Persona(nombre,apellido,rut,direccion, Integer.getInteger(telefonoFijo),Integer.getInteger(telefonoMovil),email);
+        Persona persona = new Persona(nombre,apellido,rut,direccion, telefonoFijo,telefonoMovil,email);
         CONTRATOS.registrarPersona(persona);
         ctx.json(persona);
 
@@ -118,7 +118,7 @@ public final class ApiRestEndpoints {
     public static void getControlesByNumFicha(Context ctx) {
 
         log.debug("Getting all the Control by Numero of Ficha");
-        String numero = ctx.pathParam("numeroFicha");
+        Integer numero = Integer.parseInt(ctx.formParam("numeroFicha"));
         List<Control> controles = CONTRATOS.getControlesByNumeroFicha(numero);
         ctx.json(controles);
 
@@ -131,9 +131,49 @@ public final class ApiRestEndpoints {
     public static void getDuenioByNumFicha(Context ctx) {
 
         log.debug("Getting Duenio by Numero of Ficha");
-        String numero = ctx.pathParam("numeroFicha");
+        Integer numero = Integer.parseInt(ctx.formParam("numeroFicha"));
         Persona duenio = CONTRATOS.getDuenioByNumeroFicha(numero);
         ctx.json(duenio);
     }
+
+    public static void createFicha(Context ctx) {
+
+        //Get atributes of Ficha
+
+        Integer numero = Integer.parseInt(ctx.formParam("numeroFicha"));
+        String nombrePaciente = ctx.formParam("nombrePaciente");
+        String especie = ctx.formParam("especie");
+        String raza = ctx.formParam("raza");
+        String color = ctx.formParam("color");
+        ZonedDateTime fechaNacimiento = ZonedDateTime.parse(ctx.formParam("fechaNacimiento"));
+
+        Sexo sexo;
+        if(ctx.formParam("sexo").equalsIgnoreCase("hembra")){
+            sexo = Sexo.HEMBRA;
+        }
+        else{
+            sexo = Sexo.MACHO;
+        }
+
+        Tipo tipo;
+
+        if(ctx.formParam("tipo").equalsIgnoreCase("interno")){
+            tipo = Tipo.INTERNO;
+        }
+        else{
+            tipo = Tipo.EXTERNO;
+        }
+
+        //Get duenio of Ficha
+        Long duenioId = Long.parseLong(ctx.formParam("duenio"));
+        Persona duenio = CONTRATOS.getPersonaById(duenioId);
+
+        //Create ficha and insert in the data base
+        Ficha ficha = new Ficha(numero,fechaNacimiento,nombrePaciente,especie,raza,sexo,color,tipo,duenio);
+        CONTRATOS.registrarPaciente(ficha);
+
+    }
+
+
 
 }
