@@ -1,23 +1,35 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2020 Gerald Lopez Gutiérrez <gerald.lopez@alumnos.ucn.cl>
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package cl.ucn.disc.pdbp.tdd;
 
-import checkers.units.quals.A;
-import cl.ucn.disc.pdbp.tdd.dao.Repository;
-import cl.ucn.disc.pdbp.tdd.dao.RepositoryOrmLite;
-import cl.ucn.disc.pdbp.tdd.dao.ZonedDateTimeType;
 import cl.ucn.disc.pdbp.tdd.model.*;
-import cl.ucn.disc.pdbp.tdd.utils.Entity;
-import com.j256.ormlite.jdbc.JdbcConnectionSource;
-import com.j256.ormlite.support.ConnectionSource;
-import com.j256.ormlite.table.TableUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.management.modelmbean.DescriptorSupport;
-import javax.swing.*;
-import java.io.IOException;
-import java.sql.SQLException;
 import java.time.ZonedDateTime;
 import java.util.List;
 
@@ -31,7 +43,7 @@ public final class TestContratosImpl {
     /**
      * The data base url
      */
-    private static String databaseUrl = "jdbc:h2:mem:fivet_db";
+    private static String databaseUrl = "jdbc:sqlite:fivet_db";
     /**
      *
      */
@@ -72,7 +84,7 @@ public final class TestContratosImpl {
         Assertions.assertEquals(duenio.getRut(),fichaInput.getDuenio().getRut());
 
         //Size of list
-        List<Ficha> fichas = contratos.getRepoFicha().findAll();
+        List<Ficha> fichas = contratos.getAllFichas();
         Assertions.assertEquals(1,fichas.size(),"!= 1");
 
     }
@@ -107,7 +119,7 @@ public final class TestContratosImpl {
         }
 
         //Get size of list, should be 3
-        List<Persona> personas = contratos.getRepoPersona().findAll();
+        List<Persona> personas = contratos.getAllPersonas();
         Assertions.assertEquals(3,personas.size(),"Size != 3");
 
 

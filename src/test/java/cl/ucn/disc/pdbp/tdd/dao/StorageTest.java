@@ -24,6 +24,7 @@
 package cl.ucn.disc.pdbp.tdd.dao;
 
 
+import cl.ucn.disc.pdbp.tdd.Contratos;
 import cl.ucn.disc.pdbp.tdd.model.*;
 import cl.ucn.disc.pdbp.tdd.utils.Entity;
 import com.j256.ormlite.dao.Dao;
@@ -188,6 +189,8 @@ public final class StorageTest {
             TableUtils.createTableIfNotExists(connectionSource, Persona.class);
             //Create table Ficha in the backend
             TableUtils.createTableIfNotExists(connectionSource,Ficha.class);
+            //Create table Control in the backend
+            TableUtils.createTableIfNotExists(connectionSource, Control.class);
 
             //The Repository
             Repository<Ficha,Long> theRepoFicha = new RepositoryOrmLite<>(connectionSource, Ficha.class);
