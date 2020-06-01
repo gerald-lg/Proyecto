@@ -89,6 +89,11 @@ public final class Application {
                     //Get -> /fichas
                     ApiBuilder.get(ApiRestEndpoints::getAllFichas);
 
+                    //Post ->/fichas/create
+                    ApiBuilder.path("/create",() -> {
+                        ApiBuilder.post(ApiRestEndpoints::createFicha);
+                    });
+
                     //Get -> /fichas/find/{query}
                     ApiBuilder.path("find/:query", () -> {
                         ApiBuilder.get(ApiRestEndpoints::findFichas);
